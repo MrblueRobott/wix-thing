@@ -1,0 +1,41 @@
+<script>
+  // Adjust these selectors to match your actual elements if needed
+  const input = document.querySelector('input[placeholder="Paste a URL to unblock…"]');
+  const button = document.querySelector('button:contains("Open")'); // if this doesn't work, give the button an id and use that
+
+  // Better: give them IDs in the editor and use:
+  // const input = document.getElementById('proxy-url-input');
+  // const button = document.getElementById('proxy-open-button');
+
+  if (input && button) {
+    function openProxy() {
+      const url = input.value.trim();
+      if (!url) return;
+
+      // Basic client-side validation
+      try {
+        // If user forgot protocol, assume https
+        const hasProtocol = /^https?:\/\//i.test(url);
+        const finalUrl = hasProtocol ? url : `https://${url}`;
+        const encoded = encodeURIComponent(finalUrl);
+
+        window.location.href = `/proxy?url=${encoded}`;
+      } catch (e) {
+        // Optional: show a simple error UI
+        alert('Please enter a valid URL.');
+      }
+    }
+
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      openProxy();
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        openProxy();
+      }
+    });
+  }
+</script>
